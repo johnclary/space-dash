@@ -1,0 +1,17 @@
+body {
+    background-color: #000000;
+    font-family: 'Jura', sans-serif;
+    color: #5eff89;
+}
+
+.border {
+    border-color: #5eff89 !important;
+}
+
+canvas {
+  width: 100%;
+}
+
+svg {
+    width: 100%;
+}
