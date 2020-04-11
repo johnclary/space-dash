@@ -8,7 +8,7 @@ class Radar extends Component {
       this.state = {};
       this.myRef = React.createRef();
       // "fader" scale. pow adds a nice gradient vs liner scale
-      this.state.frameRate = 32; // keep this at or above 32;
+      this.state.frameRate = 64; // keep this at or above 32;
       this.state.alphaScale = d3.scalePow().exponent(7).range([0,1]);
       this.state.radiusIncrement = 3; // radius increment  creates animation effect. increase to "speed up" animation
       this.state.bits = 90; // number of arcs which comprise the radar spinner. decreasing this val increases the fader resolution but is more memory intensive.
@@ -16,7 +16,7 @@ class Radar extends Component {
       this.state.strokeColorRGB = "94, 255, 137";
       this.state.maxLoops = 100;
       this.state.maxWidth = 200;
-      this.state.blipOpacityDecrement = .01;
+      this.state.blipOpacityDecrement = .03;
       this.state.lineWidth = 1;
       this.state.ringLineWidth = .5;
       this.state.graticuleLinewidth = .5;
@@ -95,13 +95,11 @@ class Radar extends Component {
        let trajectory = Math.floor(Math.random() * 360) * this.plusOrMinus();
        let x = Math.floor(Math.random() * radius) * this.plusOrMinus(); // arb subtraction to keep point inside radius for sum reason
        let y = Math.floor(Math.random() * radius);
-       let theta = (180/Math.PI) * Math.atan2(y, x);
        return {
            x0: x, // coordinates on plane 0,0
            y0: y,
            x: x + width/2,
            y: height - y,
-           angle: theta > 0 ? 360 - theta : theta * -1,
            trajectory: trajectory,
            opacity: 0
        };
@@ -195,8 +193,6 @@ class Radar extends Component {
       // move the blips and re-calculate angles
       blips = blips.map(function(blip) {
          blip = component.moveBlip(blip, width, height);
-         // console.log(Math.floor(blip.distance));
-         // console.log(Math.floor(currentRadius));
          return blip;
       })
 
@@ -228,8 +224,8 @@ class Radar extends Component {
 
     // draw black inner mask 
      // context.beginPath();
-     // context.arc(width/2, height/2, radius/2, 0, 2*Math.PI);
-     // context.lineTo(width/2, height/2);
+     // context.arc(width/2, height, radius/4, 0, 2*Math.PI);
+     // context.lineTo(width/2, height);
      // context.closePath();
      // context.fillStyle = "#000000"
      // context.fill();
@@ -253,7 +249,7 @@ class Radar extends Component {
       // calculate new coordinates of blip
       blip.x = blip.x + this.state.blipIncrement * Math.cos(blip.trajectory);
       blip.y = blip.y + this.state.blipIncrement * Math.sin(blip.trajectory);
-      // calculate coordinates and angle in relation to center of radar
+      // calculate coordinates in relation to center of radar
       blip.x0 = blip.x - width/2;
       blip.y0 = height - blip.y;
       blip.distance = Math.sqrt(Math.pow(blip.x0, 2) + Math.pow(blip.y0, 2));  
