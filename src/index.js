@@ -26,21 +26,6 @@ const components = [
                                 className: "row",
                                 components : [
                                     {
-                                        name : "SvgButton", // must match react component class to be rendered
-                                        className: "col-6",
-                                        src: "notes2.svg"
-                                    },
-                                     {
-                                        name : "SvgButton", // must match react component class to be rendered
-                                        className: "col-6",
-                                        src: "playpause.svg"
-                                    },
-                                ]
-                            },
-                            {
-                                className: "row",
-                                components : [
-                                    {
                                         name : "Radar", // rmust match react component class to be rendered
                                         className: "col",
                                     },
@@ -107,10 +92,29 @@ const components = [
             {
                 className: "row",
                 components : [
-
                     {
                         name : "Cassette", // rmust match react component class to be rendered
                         className: "col-3"
+                    },
+                    {
+                        className: "col-3",
+                        components: [
+                            {
+                                className: "row",
+                                components : [
+                                    {
+                                        name : "SvgButton", // must match react component class to be rendered
+                                        className: "col-6",
+                                        src: "notes2.svg"
+                                    },
+                                     {
+                                        name : "SvgButton", // must match react component class to be rendered
+                                        className: "col-6",
+                                        src: "playpause.svg"
+                                    },
+                                ]
+                            },
+                        ],
                     },
                 ],
             },
