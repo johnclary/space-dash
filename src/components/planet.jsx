@@ -9,7 +9,7 @@ class Planet extends Component {
         this.state = {};
         this.state.rotation = [0,-10,-10];
         this.state.spinIncrement = .5; // in degrees
-        this.state.spinRate = 32 // in millesconds
+        this.state.frameRate = 400 // in millesconds
         this.state.graticule = d3.geoGraticule10();
         this.state.sphere = {type: "Sphere"};
         this.state.strokeColor =  "#5eff89"; // green
@@ -17,6 +17,7 @@ class Planet extends Component {
         this.state.StrokeColor2 = "#eb4034"; // red
         this.state.initDistance = Math.floor(Math.random() * 100000000000) + 100000000000;
         this.state.fontSize = 21;
+        this.state.maxHeight = 300;
 
     }
 
@@ -44,7 +45,7 @@ class Planet extends Component {
     return this.setState(
         {
           width: width,
-          height: height
+          height: height < this.state.maxHeight ? height : this.state.maxHeight
         });
     }
 
@@ -133,7 +134,7 @@ class Planet extends Component {
           function() {
             component.spin(rotation, distance - 1);
           },
-          component.state.spinRate
+          component.state.frameRate
         );
 
     }
