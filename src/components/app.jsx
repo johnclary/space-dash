@@ -12,7 +12,14 @@ class App extends Component {
                 {
                     animate: state.animate ? false : true 
                 }
-            ));
+            ), function(){
+                const audioElement = document.getElementById('player');
+                if (this.state.animate) {
+                    audioElement.play();
+                } else {
+                    audioElement.pause();
+                }
+            });
         };
 
         this.state = {
