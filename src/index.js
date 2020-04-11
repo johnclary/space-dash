@@ -15,10 +15,10 @@ const components = [
                 // contain an array at key `components`
                 className: "row",
                 components : [
-                    // {
-                    //     name : "Starfield", // must match react component class to be rendered
-                    //     className: "col-9",
-                    // },
+                    {
+                        name : "Starfield", // must match react component class to be rendered
+                        className: "col-9",
+                    },
                     {
                         className: "col-3",
                         components : [
@@ -26,12 +26,12 @@ const components = [
                                 className: "row",
                                 components : [
                                     {
-                                        name : "SvgLoader", // must match react component class to be rendered
+                                        name : "SvgButton", // must match react component class to be rendered
                                         className: "col-6",
                                         src: "notes2.svg"
                                     },
                                      {
-                                        name : "SvgLoader", // must match react component class to be rendered
+                                        name : "SvgButton", // must match react component class to be rendered
                                         className: "col-6",
                                         src: "playpause.svg"
                                     },
