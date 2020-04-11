@@ -2,9 +2,7 @@ import React, { Component } from 'react'
 import * as d3 from "d3";
 
 class Radar extends Component {
-   // see: https://medium.com/@Elijah_Meeks/interactive-applications-with-react-d3-f76f7b3ebc71
-   
-   // todo: set origin to height
+
    constructor(props){
       super(props);
       this.state = {};
@@ -36,11 +34,6 @@ class Radar extends Component {
              return this.setState({rotating: true}, () => this.rotate(this.state.blips, 0, 0));
       });
   }
-
-
-   componentDidUpdate() {
-
-   }
     
   initRadarCanvas() {
 
