@@ -15,9 +15,10 @@ class Planet extends Component {
         this.state.strokeColor =  "#5eff89"; // green
         this.state.StrokeColorAlpha = "rgb(94, 255, 137, .6";
         this.state.StrokeColor2 = "#eb4034"; // red
-        this.state.initDistance = Math.floor(Math.random() * 100000000000) + 100000000000;
+        this.state.distance = Math.floor(Math.random() * 100000000000) + 100000000000;
         this.state.fontSize = 21;
         this.state.maxHeight = 300;
+        this.state.formatNumber = d3.format(",");
 
     }
 
@@ -84,15 +85,15 @@ class Planet extends Component {
     renderMap() {
         // todo this is a pointless function
         const component = this;
-        component.spin(this.state.rotation, this.state.initDistance);
+        component.spin(this.state.rotation);
         return true;
     }
 
-    spin(rotation, distance) {
+    spin(rotation) {
         const component = this;
         const strokeColor = component.state.strokeColor;
         const strokeColorAlpha = component.state.StrokeColorAlpha;
-
+        let distance = component.state.distance;
         const width = component.state.width;
         const height = component.state.height;
 
@@ -106,7 +107,7 @@ class Planet extends Component {
 
         const projection = d3.geoOrthographic()
             .rotate(rotation)
-            .fitExtent([[5, 50], [width - 5, height - 5]],  {type: "Sphere"});
+            .fitExtent([[0, 0], [width, height]],  {type: "Sphere"});
         
         // todo: move to state
         const path = d3.geoPath(projection, context);
@@ -128,35 +129,28 @@ class Planet extends Component {
         path(component.state.sphere);
         context.strokeStyle = strokeColor;
         context.stroke();
-        component.renderLabels(context, distance);
+
+        component.setState(function() {
+            distance = distance - Math.floor(Math.random() * 500);
+            return {distance: distance};
+        });
 
         return setTimeout(
           function() {
-            component.spin(rotation, distance - 1);
+            component.spin(rotation);
           },
           component.state.frameRate
         );
 
     }
-    
-    renderLabels(context, distance) {
-        context.font = this.state.fontSize + "px Jura";
-        context.fillStyle = this.state.strokeColor;
-        context.fillText("Target: ", 5, this.state.fontSize + 5);
-        context.fillStyle = this.state.StrokeColor2;
-        context.fillText("Earth ", this.state.fontSize * 4, this.state.fontSize + 5);
-
-        const dist = d3.format(",")(distance);
-        context.fillStyle = this.state.StrokeColor;
-        context.fillText("Dist: ", 5, (this.state.fontSize * 2) + 5);
-        context.fillStyle = this.state.StrokeColor2;
-        context.fillText(dist + "m", this.state.fontSize * 4, (this.state.fontSize * 2) + 5);
-
-    }
 
     render() {
         return (
-            <canvas ref={this.myRef}></canvas>
+            <React.Fragment>
+                <h6 className="instrHeader">Target: <span style={{color: this.state.StrokeColor2}}>Earth</span></h6>
+                <h6 className="instrHeader">Dist: <span style={{color: this.state.StrokeColor2}}>{this.state.formatNumber(this.state.distance)}m</span></h6>
+                <canvas ref={this.myRef}></canvas>
+            </React.Fragment>
         );
     }
 }   
