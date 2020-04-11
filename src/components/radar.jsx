@@ -17,7 +17,7 @@ class Radar extends Component {
       this.state.blipCount = 10;
       this.state.strokeColorRGB = "94, 255, 137";
       this.state.maxLoops = 100;
-      this.state.maxHeight = 500;
+      this.state.maxWidth = 200;
       this.state.blipOpacityDecrement = .01;
       this.state.lineWidth = 1;
       this.state.ringLineWidth = .5;
@@ -44,20 +44,20 @@ class Radar extends Component {
     
   initRadarCanvas() {
 
-      const width = this.myRef.current.parentNode.clientWidth;
-      
-      let height = this.myRef.current.parentNode.clientWidth;
-      
-      height = height < this.state.maxHeight ? height : this.state.maxHeight;
+      let width = this.myRef.current.parentNode.clientWidth;
+    
+      let height = this.myRef.current.parentNode.clientHeight;
 
-      const radius = width > height ? height : width/2;
+      const edge = width > height ? height : width;
+      
+      const radius = edge/2;
 
       const blipIncrement = .002 * radius; // blip spped. will remain on radar for a max of 2x blipcincrement num of frames
       
       this.setState(
         {
-          width: width,
-          height: height,
+          width: edge,
+          height: edge/2,
           radius: radius,
           blipIncrement: blipIncrement
         },
