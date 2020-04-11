@@ -15,22 +15,28 @@ const components = [
                 // contain an array at key `components`
                 className: "row",
                 components : [
+
                     {
                         name : "Starfield", // must match react component class to be rendered
-                        className: "col-9",
+                        className: "col-5",
+                    },
+                ],
+            },
+            {
+                className: "row",
+                components : [
+                    {
+                        name : "Planet", // must match react component class to be rendered
+                        className: "col",
                     },
                     {
-                        className: "col-3",
+                        name : "Radar", // rmust match react component class to be rendered
+                        className: "col",
+                    },
+                    {
+                        className: "col",
                         components : [
-                            {
-                                className: "row",
-                                components : [
-                                    {
-                                        name : "Radar", // rmust match react component class to be rendered
-                                        className: "col",
-                                    },
-                                ],
-                            },
+
                             {
                                 className: "row",
                                 components : [
@@ -87,11 +93,7 @@ const components = [
                             }
                         ],
                     },
-                ],
-            },
-            {
-                className: "row",
-                components : [
+  
                     {
                         name : "Cassette", // rmust match react component class to be rendered
                         className: "col-3"
