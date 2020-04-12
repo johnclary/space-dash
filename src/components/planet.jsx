@@ -147,8 +147,8 @@ class Planet extends Component {
     render() {
         return (
             <React.Fragment>
-                <h6 className="instrHeader">Target: <span style={{color: this.state.StrokeColor2}}>Earth</span></h6>
-                <h6 className="instrHeader">Dist: <span style={{color: this.state.StrokeColor2}}>{this.state.formatNumber(this.state.distance)}m</span></h6>
+                <h6 className="instrHeader">Target: <span className="instrValue">Earth</span></h6>
+                <h6 className="instrHeader">Dist: <span  className="instrValue">{this.state.formatNumber(this.state.distance)}m</span></h6>
                 <canvas ref={this.myRef}></canvas>
             </React.Fragment>
         );

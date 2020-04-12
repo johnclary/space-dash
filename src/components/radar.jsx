@@ -13,13 +13,16 @@ class Radar extends Component {
       this.state.radiusIncrement = 3; // radius increment  creates animation effect. increase to "speed up" animation
       this.state.bits = 90; // number of arcs which comprise the radar spinner. decreasing this val increases the fader resolution but is more memory intensive.
       this.state.blipCount = 10;
-      this.state.strokeColorRGB = "94, 255, 137";
+      this.state.blipRadius = 3;
+      this.state.strokeColorRgbGreen = "94, 255, 137";
+      this.state.strokeColorRgbRed = "235, 64, 52";
       this.state.maxLoops = 100;
-      this.state.maxWidth = 200;
+      this.state.maxWidth = 300;
       this.state.blipOpacityDecrement = .03;
       this.state.lineWidth = 1;
       this.state.ringLineWidth = .5;
       this.state.graticuleLinewidth = .5;
+      this.state.tracking = 0;
 
    }
 
@@ -45,12 +48,12 @@ class Radar extends Component {
       
       const radius = edge/2;
 
-      const blipIncrement = .002 * radius; // blip spped. will remain on radar for a max of 2x blipcincrement num of frames
+      const blipIncrement = .003 * radius; // blip spped. will remain on radar for a max of 2x blipcincrement num of frames
       
       this.setState(
         {
           width: edge,
-          height: edge/2,
+          height: edge/1.5,
           radius: radius,
           blipIncrement: blipIncrement
         },
@@ -92,17 +95,38 @@ class Radar extends Component {
    }
 
    radarBlip(node, radius, width, height) {
-       let trajectory = Math.floor(Math.random() * 360) * this.plusOrMinus();
-       let x = Math.floor(Math.random() * radius) * this.plusOrMinus(); // arb subtraction to keep point inside radius for sum reason
-       let y = Math.floor(Math.random() * radius);
-       return {
-           x0: x, // coordinates on plane 0,0
-           y0: y,
-           x: x + width/2,
-           y: height - y,
-           trajectory: trajectory,
-           opacity: 0
-       };
+    // ensure new blips are near the outer edge of radar
+    let x = Math.floor(Math.random() * radius - (radius * .9) + radius * .9) * this.plusOrMinus();
+    let y = Math.floor(Math.random() * radius - (radius * .9) + radius * .9);
+    let mX = Math.random() * this.plusOrMinus();
+    let mY = Math.random() * this.state.blipIncrement * -1;
+    let m = (mY/mX);
+    
+    let b = y - (m * x);
+    let xInt = b/m * -1; 
+
+     // logic to set slope account for movement toward origin
+    // e.g we want to flag points moving toward top left quad as positive slop
+    if (mY < 0 && m > 0) {
+      m = m * -1;
+    } else if ( mX < 0 && mY > 0) {
+      m = m * -1;
+    }
+
+
+
+    return {
+       x0: x, // coordinates on plane 0,0
+       y0: y,
+       x: x + width/2,
+       y: height - y,
+       opacity: 0,
+       mX: mX,
+       mY: mY,
+       m: m,
+       b: b,
+       xInt: xInt,
+    };
 
    }
 
@@ -122,7 +146,8 @@ class Radar extends Component {
       const radius = component.state.radius;
       const bits = component.state.bits;
       const alphaScale = component.state.alphaScale;
-      const strokeColorRGB = component.state.strokeColorRGB;
+      const strokeColorRgbGreen = component.state.strokeColorRgbGreen;
+      const strokeColorRgbRed= component.state.strokeColorRgbRed;
 
       context.clearRect(0, 0, width, height);
 
@@ -165,12 +190,6 @@ class Radar extends Component {
         return {x:x,y:y};
       }
 
-      // draw expanding radar circle
-      context.fillStyle = "#fff"
-      context.font = '18px Jura';
-      context.fillText('rC: ' + currentRadius, 10, 20);
-      context.fillText('r: ' + radius, 10, 40);
-
       for (let i = 0; i <= currentRadius; i++) {
 
         let alpha = i/currentRadius; 
@@ -183,7 +202,7 @@ class Radar extends Component {
         }
 
          context.lineWidth = component.state.lineWidth;
-         context.strokeStyle = "rgba(" + strokeColorRGB + ", " + opacity + ")";
+         context.strokeStyle = "rgba(" + strokeColorRgbGreen + ", " + opacity + ")";
          context.beginPath();
          context.arc(width/2, height, (i/currentRadius) * currentRadius, Math.PI, 0);
          context.stroke();
@@ -196,10 +215,16 @@ class Radar extends Component {
          return blip;
       })
 
+      let tracking = 0;
       for (let i = 0; i < blips.length; i++) {
          // blip when the angle of the radar is within the threshold
          // of the point location
          var blip = blips[i];
+
+         // regenerate blip once it moves off radar
+         if (blip.distance > radius || blip.y0 < 0) {
+             blips[i] = component.radarBlip(component, radius, width, height);
+         }
 
          if (Math.abs(Math.floor(currentRadius-blip.distance)) < 5)  {
              // flash point w/ opacity when intersects with radar angle
@@ -209,19 +234,24 @@ class Radar extends Component {
              blip.opacity = blip.opacity - component.state.blipOpacityDecrement; // todo use constanst
          }
 
-         // draw the blip
-         context.fillStyle = "rgba(" + strokeColorRGB + ", " + blip.opacity + ")";
-         context.beginPath();
-         context.arc(blip.x, blip.y, 3, 0, 2*Math.PI);
-         context.fill();
+         
+         let blipRadius;
+         // draw the blip. highlighting tracking in red
+        if (blip.b > -35 && blip.b < 35 && blip.xInt < 35 && blip.xInt > -35 && blip.m < 0) {
+          context.fillStyle = "rgba(" + strokeColorRgbRed + ", " + blip.opacity + ")";
+          blipRadius = component.state.blipRadius * 1.25;
+          tracking++;
+        } else {
+          context.fillStyle = "rgba(" + strokeColorRgbGreen + ", " + blip.opacity + ")";
+          blipRadius = component.state.blipRadius;
+        }
 
-         // remove blip once it moves off radar
-         if (blip.distance > radius || blip.y0 < 0) {
-             blips[i] = component.radarBlip(component, radius, width, height);
-         }
+         context.beginPath();
+         context.arc(blip.x, blip.y, blipRadius, 0, 2*Math.PI);
+         context.fill();
       }
 
-
+      component.setState({tracking: tracking});
     // draw black inner mask 
      // context.beginPath();
      // context.arc(width/2, height, radius/4, 0, 2*Math.PI);
@@ -245,20 +275,33 @@ class Radar extends Component {
       }
    }
 
-   moveBlip(blip, width, height) { // todo calculate increment dynamically and use state
-      // calculate new coordinates of blip
-      blip.x = blip.x + this.state.blipIncrement * Math.cos(blip.trajectory);
-      blip.y = blip.y + this.state.blipIncrement * Math.sin(blip.trajectory);
+   moveBlip(blip, width, height) {
       // calculate coordinates in relation to center of radar
-      blip.x0 = blip.x - width/2;
-      blip.y0 = height - blip.y;
+      blip.x0 = blip.x0 + blip.mX;
+      blip.y0 = blip.y0 + blip.mY;
       blip.distance = Math.sqrt(Math.pow(blip.x0, 2) + Math.pow(blip.y0, 2));  
+
+      // calculate new coordinates of blip
+      blip.x = blip.x0 + width/2;
+      blip.y = height - blip.y0;
+      
       return blip;
+  }
+
+  blinkText(){
+    if (this.state.tracking > 0) {
+      return "instrValue blinking";
+    } else { 
+      return "instrValue";
+    }
   }
 
   render() {
     return (
-      <canvas ref={this.myRef}></canvas>
+      <React.Fragment>
+        <h6 className="instrHeader">Tracking: <span className={this.blinkText()} > {this.state.tracking}</span></h6>
+        <canvas ref={this.myRef}></canvas>
+      </React.Fragment>
     );
   }
 }

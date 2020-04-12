@@ -8,6 +8,7 @@ import Planet from "./planet";
 import Shuttle from "./shuttle";
 import Ekg from "./ekg";
 import SvgButton from "./svgButton"
+import Logger from "./logger"
 
 class Instrument extends Component {
     constructor(props) {
@@ -28,7 +29,8 @@ class Instrument extends Component {
             Planet: Planet,
             Shuttle: Shuttle,
             Ekg: Ekg,
-            SvgButton: SvgButton
+            SvgButton: SvgButton,
+            Logger: Logger
         }
 
         return instruments[name];
@@ -47,7 +49,7 @@ class Instrument extends Component {
             return (
                 <React.Fragment>
                     {this.state.showSpinner && <Spinner name={this.props.name} />}
-                    <InstrName src={this.props.src}/>
+                    <InstrName src={this.props.src} label={this.props.label}/>
                 </React.Fragment>
             );
         }

@@ -13,6 +13,22 @@ body {
     margin: 0;
 }
 
+.instrValue {
+    color: #eb4034; /* red */
+}
+
+.blinking {
+    animation:blinkingText 1.2s infinite;
+}
+
+@keyframes blinkingText{
+    0%{     color: #eb4034;    }
+    20%{    color: transparent; }
+    40%{   color: #eb4034;    }
+    60%{    color: transparent; }
+    80%{   color: #eb4034;    }
+}
+
 canvas {
   width: 100%;
 }

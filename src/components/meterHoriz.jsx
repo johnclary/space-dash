@@ -7,13 +7,14 @@ class MeterHoriz extends Component {
       super(props);
       this.myRef = React.createRef();
       this.state = {};
-      this.state.segmentCount = 50; // number of steps in the meter
+      console.log("props ", props);
+      this.state.segmentCount = 25; // number of steps in the meter
       this.state.strokeWidth = 2;
       this.state.strokeColor = "#5eff89";
       this.state.colorScale = d3.scaleLinear().domain([0, this.state.segmentCount]).range(["#eb4034", this.state.strokeColor]);
       this.state.rX = 4; // segment corner rounding in pixels
       this.state.initialized = false;
-      this.state.initVal = 1;
+      this.state.currentVal = 1;
       this.state.baseOpacity = .2; // opacity of "unlit" segments
       this.state.defaultHeight = 25; // in pixels. component will be set to the *smaller* height of either default height or parent element height
       this.state.updateRate = 3000; // elapsed millseconds between new val is generated
@@ -31,15 +32,15 @@ class MeterHoriz extends Component {
     promise.then(function(){
       
       component.setState({initialized: true}, function(){
-        component.updateIndicator();
+        component.updateIndicator(this.state.currentVal);
         
       });
     });
   }
 
   initMeterSvg() {
-      const width = this.myRef.current.parentNode.clientWidth;
-      const segWidth = width / this.state.segmentCount;
+      const width = this.myRef.current.parentNode.offsetWidth;
+      const segWidth = ((width - this.state.strokeWidth*2) / this.state.segmentCount) - this.state.strokeWidth;
       const height = this.myRef.current.parentNode.clientHeight;
 
       this.setState(
@@ -92,9 +93,9 @@ class MeterHoriz extends Component {
     return [...Array(this.state.segmentCount).keys()].map( i => i < filledSegments ? 1 : 0);
   }
 
-  updateIndicator() {
+  updateIndicator(currentVal) {
       const component = this;
-      let currentVal = component.state.initVal * ((Math.random() * .4) + .8);
+      currentVal = currentVal * ((Math.random() * .4) + .8);
       currentVal = currentVal > 1 ? 1 : currentVal;
       const segmentCount = component.state.segmentCount;
 
@@ -111,7 +112,7 @@ class MeterHoriz extends Component {
           .transition()
           .delay(function(d, i) { 
               // logic to set the "direction" of transition
-              if (component.state.initVal > currentVal) {
+              if (component.state.currentVal > currentVal) {
                   return (segmentCount - i)/segmentCount * transitionTime;
               } else {
                   return (i/segmentCount) * transitionTime;
@@ -127,10 +128,11 @@ class MeterHoriz extends Component {
 
         setTimeout( 
           function() {
-              component.setState(
-                {initVal: currentVal},
-                function() { return component.updateIndicator()}
-              );
+            component.setState(
+              {currentVal: currentVal},
+              function() {
+                component.updateIndicator(currentVal);    
+              });
           }, this.state.updateRate);
 
   }
@@ -154,11 +156,22 @@ class MeterHoriz extends Component {
    // return 1 or -1
       return Math.random() < 0.5 ? -1 : 1;
    }
+  
+  blinkText(){
+    if (this.state.currentVal < .3) {
+      return "instrValue blinking";
+    } else { 
+      return "instrValue";
+    }
+  }
 
    render() {
       
          return (
+          <React.Fragment>
+            <h6 className="instrHeader">{this.props.label}: <span className={this.blinkText()} > {(Math.floor(this.state.currentVal  * 100) + "%")}</span></h6>
             <svg ref={this.myRef}></svg>
+          </React.Fragment>
          );
       }
 

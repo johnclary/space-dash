@@ -32,7 +32,7 @@ class App extends Component {
 
         return (
             <AnimateContext.Provider value={this.state}>
-                <Instrument name={ instrument.name } className={instrument.className} src={instrument.src} animate={this.state.animate}/>
+                <Instrument name={ instrument.name } className={instrument.className} src={instrument.src} label={instrument.label} animate={this.state.animate}/>
             </AnimateContext.Provider>
         )
     };
