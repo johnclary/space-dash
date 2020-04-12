@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import * as d3 from "d3";
+import {AnimateContext} from './animate-context';
 
 class Cassette extends Component {
 
@@ -7,15 +8,17 @@ class Cassette extends Component {
       super(props);
       this.myRef = React.createRef();
       this.state = {initialized: false};
+      this.state.animate = false; // animation triggered via context update from play button
       this.state.ticksPerReel = 8;
       this.state.increment = 2;  // degrees by which to rotate ticks each frame
       this.state.frameRate = 32;
       this.state.transitionDuration = this.state.frameRate; // must be >= frameRate
+      this.state.ticks = [];
   }
 
   componentDidMount() {
     const component = this;
-
+    
     const promise = new Promise(function(resolve, reject) {
       const res = component.initCassette();
       resolve(res);
@@ -29,6 +32,10 @@ class Cassette extends Component {
     });
   }
 
+  componentDidUpdate() {
+    this.play(this.state.ticks);
+  }
+
   initCassette () {
       const width = this.myRef.current.parentNode.clientWidth;
 
@@ -36,7 +43,7 @@ class Cassette extends Component {
         {
           width: width,
         },
-        function(state) {
+        function() {
           return true;
       });
    }
@@ -165,11 +172,9 @@ class Cassette extends Component {
 
     return component.setState(
       {
-        ticks: ticks,
-        animate: true
-
-      }, function() {
-        component.play(this.state.ticks);
+        ticks: ticks
+      }, function(state) {
+        component.play(component.state.ticks);
     });
     
    }
@@ -178,7 +183,7 @@ class Cassette extends Component {
   play(ticks) {
     const component = this;
 
-    if (component.state.animate === false) {
+    if (this.context.animate === false) {
       return;
     }
 
@@ -207,11 +212,6 @@ class Cassette extends Component {
       })
   }
 
-  handleClick() {
-    console.log('The link was clicked.');
-  }
-
-
   render() {
     return (
       <svg ref={this.myRef} className="tape" viewBox="0 7.6 48 32.9" x="0" y="0">
@@ -220,7 +220,7 @@ class Cassette extends Component {
             <rect x="13.5" y="19.5" width="20.5" height="6" stroke-width="3" />
             </clipPath>
         </defs>
-        <circle onClick={this.handleClick} clip-path="url(#clipWindow)" className="tape" cx="13.5" cy="22.5" r="2" fill="none" stroke="#5eff89" stroke-width="10" opacity=".5"></circle>
+        <circle clip-path="url(#clipWindow)" className="tape" cx="13.5" cy="22.5" r="2" fill="none" stroke="#5eff89" stroke-width="10" opacity=".5"></circle>
         <circle clip-path="url(#clipWindow)" className="tape" cx="34" cy="22.5" r="4" fill="none" stroke="#5eff89" stroke-width="1.5" opacity=".5"></circle>
         <path  fill="#5eff89" d="M46.68,7.52H1.32A1.32,1.32,0,0,0,0,8.83V39.17a1.32,1.32,0,0,0,1.32,1.31H7.66l1.57-7.69a.31.31,0,0,1,.3-.24H38.47a.31.31,0,0,1,.3.24l1.57,7.69h6.34A1.32,1.32,0,0,0,48,39.17V8.83A1.32,1.32,0,0,0,46.68,7.52Zm-.92,24H2.24v-1H45.76Zm0-3.85H2.24V11.89a2,2,0,0,1,1.94-2H43.82a2,2,0,0,1,1.94,2Z"/>
         <path fill="#5eff89" d="M9.78,33.16l-1.5,7.32H39.72l-1.5-7.32Zm2.68,6.72a1.22,1.22,0,1,1,1.22-1.22A1.22,1.22,0,0,1,12.46,39.88ZM24,36.08A1.09,1.09,0,1,1,25.09,35,1.09,1.09,0,0,1,24,36.08Zm11.54,3.8a1.22,1.22,0,1,1,1.22-1.22A1.22,1.22,0,0,1,35.54,39.88Z"/>
@@ -231,6 +231,7 @@ class Cassette extends Component {
   }
 }
    
+Cassette.contextType = AnimateContext;
 
 
 export default Cassette; 

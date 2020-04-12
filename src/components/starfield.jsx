@@ -20,6 +20,7 @@ class Starfield extends Component {
       this.state.labelPct = .005 // % of stars that are labeled
       this.state.strokeColorRGB = "94, 255, 137"; // TODO move this to global style component
       this.state.stars = [];
+      this.state.rotate = 0;
    }
 
    componentDidMount() {
@@ -94,10 +95,24 @@ class Starfield extends Component {
       const width = component.state.width;
       const height = component.state.height;
       const strokeColorRGB = component.state.strokeColorRGB;
+      
+      // context.translate(0,0);
+      // context.clearRect(0, 0, width, height);
 
-      stars = component.adjustStars(stars, width, height);
+      // if (Math.random() > .9) {
+      //   this.setState({rotate: this.state.rotate + 0.001}, function(){
+      //             // translate context to center of canvas
+      //   context.translate(width / 2, height / 2);
+      //   // rotate 45 degrees clockwise
+      //   context.rotate(this.state.rotate);
+      //   context.translate(width / -2, height / -2);
+      //   });
+
+      // }
 
       context.clearRect(0, 0, width, height);
+
+      stars = component.adjustStars(stars, width, height);
 
       for (var i = 0; i < stars.length; i++) {
         
@@ -198,7 +213,7 @@ class Starfield extends Component {
        context.fillText(label, x + edge, y);
    }
   
-  reProject(star) { //TODO use constant
+  reProject(star, rotate=false) {
     // see: https://math.stackexchange.com/questions/2337183/one-point-perspective-formula
     const x = star.x * (this.state.distance/(star.z + this.state.distance));
     const y = star.y * (this.state.distance/(star.z + this.state.distance))

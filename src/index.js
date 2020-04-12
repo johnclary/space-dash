@@ -15,33 +15,34 @@ const components = [
                 // contain an array at key `components`
                 className: "row",
                 components : [
-                    // {
-                    //     name : "Starfield", // must match react component class to be rendered
-                    //     className: "col-9",
-                    // },
+
                     {
-                        className: "col-3",
+                        name : "Starfield", // must match react component class to be rendered
+                        className: "col",
+                    },
+                ],
+            },
+            {
+                className: "row",
+                components : [
+                    {
+                        name : "Planet", // must match react component class to be rendered
+                        className: "col",
+                    },
+                    {
+                        name : "Radar", // rmust match react component class to be rendered
+                        className: "co-3",
+                    },
+                    {
+                        className: "col",
                         components : [
+
                             {
                                 className: "row",
                                 components : [
                                     {
-                                        name : "SvgLoader", // must match react component class to be rendered
-                                        className: "col-6",
-                                        src: "notes2.svg"
-                                    },
-                                     {
-                                        name : "SvgLoader", // must match react component class to be rendered
-                                        className: "col-6",
-                                        src: "playpause.svg"
-                                    },
-                                ]
-                            },
-                            {
-                                className: "row",
-                                components : [
-                                    {
-                                        name : "Radar", // rmust match react component class to be rendered
+                                        name : "MeterHoriz", // rmust match react component class to be rendered
+                                        label: "Oxygen",
                                         className: "col",
                                     },
                                 ],
@@ -51,6 +52,7 @@ const components = [
                                 components : [
                                     {
                                         name : "MeterHoriz", // rmust match react component class to be rendered
+                                        label: "Fuel",
                                         className: "col",
                                     },
                                 ],
@@ -60,33 +62,7 @@ const components = [
                                 components : [
                                     {
                                         name : "MeterHoriz", // rmust match react component class to be rendered
-                                        className: "col",
-                                    },
-                                ],
-                            },
-                            {
-                                className: "row",
-                                components : [
-                                    {
-                                        name : "MeterHoriz", // rmust match react component class to be rendered
-                                        className: "col",
-                                    },
-                                ],
-                            },
-                            {
-                                className: "row",
-                                components : [
-                                    {
-                                        name : "MeterHoriz", // rmust match react component class to be rendered
-                                        className: "col",
-                                    },
-                                ],
-                            },
-                            {
-                                className: "row",
-                                components : [
-                                    {
-                                        name : "MeterHoriz", // rmust match react component class to be rendered
+                                        label: "Cell",
                                         className: "col",
                                     },
                                 ],
@@ -102,16 +78,25 @@ const components = [
                             }
                         ],
                     },
-                ],
-            },
-            {
-                className: "row",
-                components : [
-
+  
                     {
                         name : "Cassette", // rmust match react component class to be rendered
                         className: "col-3"
                     },
+                    {
+                        name : "Logger",
+                        className: "col-3",
+                    },
+                                    // {
+                                    //     name : "SvgButton", // must match react component class to be rendered
+                                    //     className: "col-6",
+                                    //     src: "notes2.svg"
+                                    // },
+                                    //  {
+                                    //     name : "SvgButton", // must match react component class to be rendered
+                                    //     className: "col-6",
+                                    //     src: "playpause.svg"
+                                    // },
                 ],
             },
         ],

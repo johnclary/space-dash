@@ -4,10 +4,35 @@ import {AnimateContext} from './animate-context';
 
 class App extends Component {
 
+    constructor(props){
+        super(props);
+
+        this.toggleAnimate = () => {
+            this.setState(state => (
+                {
+                    animate: state.animate ? false : true 
+                }
+            ), function(){
+                const audioElement = document.getElementById('player');
+                if (this.state.animate) {
+                    audioElement.play();
+                } else {
+                    audioElement.pause();
+                }
+            });
+        };
+
+        this.state = {
+          animate: false,
+          toggleAnimate: this.toggleAnimate,
+        };
+    }
+
     handleInstrument(instrument) {
+
         return (
-            <AnimateContext.Provider>
-                <Instrument name={ instrument.name } className={instrument.className} src={instrument.src} />
+            <AnimateContext.Provider value={this.state}>
+                <Instrument name={ instrument.name } className={instrument.className} src={instrument.src} label={instrument.label} animate={this.state.animate}/>
             </AnimateContext.Provider>
         )
     };

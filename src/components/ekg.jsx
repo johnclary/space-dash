@@ -12,7 +12,7 @@ class Ekg extends Component {
       this.state.bits = 52; // number of vertexes in line. make it a factor of the length of the heartbeat + spacing
       this.state.beatSpacing = [...Array(5).keys()].map(x => 0); // number of bits separating each heartbeat
       this.state.ekg = this.state.heartBeat.concat(this.state.beatSpacing);
-      this.state.frameRate = 108;
+      this.state.frameRate = 90;
       this.state.shiftIncrement = .5 // pixels shifted per frame
       this.state.strokeStyle = "#5eff89";
    }

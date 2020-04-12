@@ -7,7 +7,8 @@ import Cassette from "./cassette";
 import Planet from "./planet";
 import Shuttle from "./shuttle";
 import Ekg from "./ekg";
-import SvgLoader from "./svgLoader"
+import SvgButton from "./svgButton"
+import Logger from "./logger"
 
 class Instrument extends Component {
     constructor(props) {
@@ -28,7 +29,8 @@ class Instrument extends Component {
             Planet: Planet,
             Shuttle: Shuttle,
             Ekg: Ekg,
-            SvgLoader: SvgLoader
+            SvgButton: SvgButton,
+            Logger: Logger
         }
 
         return instruments[name];
@@ -39,7 +41,7 @@ class Instrument extends Component {
         const className = "border rounded-lg " + this.props.className;
 
         const InstrName = this.getInstrument(this.props.name);
-
+        
         if (!InstrName) {
             return (<div><h1>Instrument Not Found!</h1></div>);
         } else {
@@ -47,7 +49,7 @@ class Instrument extends Component {
             return (
                 <React.Fragment>
                     {this.state.showSpinner && <Spinner name={this.props.name} />}
-                    <InstrName src={this.props.src} />
+                    <InstrName src={this.props.src} label={this.props.label}/>
                 </React.Fragment>
             );
         }
