@@ -169,7 +169,7 @@ class MeterHoriz extends Component {
       
          return (
           <React.Fragment>
-            <h6 className="instrHeader">{this.props.label}: <span className={this.blinkText()} > {(Math.floor(this.state.currentVal  * 100) + "%")}</span></h6>
+            <h6 className="instrHeader">{this.props.label} <span className={this.blinkText()} > {(Math.floor(this.state.currentVal  * 100) + "%")}</span></h6>
             <svg ref={this.myRef}></svg>
           </React.Fragment>
          );

@@ -299,7 +299,7 @@ class Radar extends Component {
   render() {
     return (
       <React.Fragment>
-        <h6 className="instrHeader">Tracking: <span className={this.blinkText()} > {this.state.tracking}</span></h6>
+        <h6 className="instrHeader">tracking <span className={this.blinkText()} > {this.state.tracking}</span></h6>
         <canvas ref={this.myRef}></canvas>
       </React.Fragment>
     );
