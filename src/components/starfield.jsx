@@ -209,7 +209,7 @@ class Starfield extends Component {
        context.strokeStyle = "#eb4034";
        context.fillStyle = "#eb4034";
        context.strokeRect(x - edge/2, y - edge/2 ,edge ,edge);    
-       context.font = "18px Jura";
+       context.font = "18px Courier New";
        context.fillText(label, x + edge, y);
    }
   

@@ -8,13 +8,14 @@ class Logger extends Component {
       this.state = {};
       this.myRef = React.createRef();
       this.state.animate = false;
-      this.state.maxHeight = 300;
-      this.state.fontSize = 16;
+      this.state.maxHeight = 250;
+      this.state.fontSize = 19;
       this.state.fillStyle = "green";
       this.state.maxUpdateTime = 5000; // max milliseconds before new log is printed
       this.state.minUpdateTime = 750; // max milliseconds before new log is printed
       this.state.strokeGreen = "#5eff89";
       this.state.strokeRed = "#eb4034";
+      this.state.strokeBlue = "#7773ff";
    }
 
    componentDidMount() {
@@ -65,16 +66,14 @@ class Logger extends Component {
   generateLogs(rowCount) {
     const component = this;
     return [...Array(rowCount).keys()].map(function(){
-      const str = component.getLog();
-
-      return str.split("");
+      return component.getLog();
     });
   }
 
   updateLogs(logs) {
-    const str = this.getLog();
+    const log = this.getLog();
     logs.shift();
-    logs.push(str.split(""));
+    logs.push(log);
     return logs
   }
 
@@ -85,45 +84,55 @@ class Logger extends Component {
 
   getLog() {
     const metrics = [
-      "Oxygen regenerators",
-      "Rarefied Protease Inhibitors",
-      "Fuel convolvers",
-      "Aft Ion refractors",
-      "Forward Ion refractors",
-      "Aft Solar Shields",
-      "Forward Solar Shields",
-      "Dioxide Sifters",
-      "Orthagonic trim",
-      "Thermite Spectrometer",
-      "Solenoid Decouplers",
-      "Diazapam Conflators",
-      "Thulium Reconstitutors",
-      "Hyper Array Trajectory",
-      "Gallium Thrusters",
-      "Load Re-balancers",
-      "Hyperclonic deflectors",
-      "Copernicium Inductors",
-      "Radon Inductors",
-      "Astatine Fabrictors",
-      "Sim-grav rotators",
+      "oxygen regenerators: ",
+      "protease inhibitors: ",
+      "fuel convolvers: ",
+      "aft ion refractors: ",
+      "double-angel + vape ",
+      "double-angel + vape ",
+      "double-angel + vape ",
+      "double-angel + vape ",
+      "double-angel + vape ",
+      "forward ion refractors: ",
+      "aft solar shields: ",
+      "forward solar shields: ",
+      "dioxide sifters: ",
+      "orthagonic trim: ",
+      "thermite spectrometer: ",
+      "solenoid decouplers: ",
+      "diazapam conflators: ",
+      "thulium reconstitutor: ",
+      "hyper array trajectory: ",
+      "gallium thruster: ",
+      "load re-balancers: ",
+      "hyperclonic deflectors: ",
+      "copernicium inductor: ",
+      "radon inductors: ",
+      "astatine fabrictors: ",
+      "sim-grav rotators: ",
     ];
 
     const modifiers = [
-      false, // will calculate a number val
+      false, // will calculate a number and status
       false,
       false,
       false,
       false,
       false,
-      ": Unstable (!)",
-      ": Offline (!)",
-      ": Restarting...",
-      ": Stable",
-      ": Recalculating...",
-      ": Normal",
-      ": Normal",
-      ": Repositioning...",
-      ": Acquiring...",
+      ["unstable", "bad"],
+      ["offline", "bad"],
+      ["restarting", "in_progress"],
+      ["stable", "ok"],
+      ["stable", "ok"],
+      ["stable", "ok"],
+      ["stable", "ok"],
+      ["recalculating", "in_progress"],
+      ["normal", "ok"],
+      ["normal", "ok"],
+      ["normal", "ok"],
+      ["normal", "ok"],
+      ["repositioning", "in_progress"],
+      ["acquiring", "in_progress"],
     ];
 
     // randomly pick a modifier
@@ -131,16 +140,17 @@ class Logger extends Component {
     const y = Math.floor(Math.random() *  modifiers.length);
     
     // random hex
-    const code = "[" + (Math.random()*0xF<<0).toString(16) + "x" + (Math.random()*0xF<<0).toString(16) + "]";
+    // const code = "[" + (Math.random()*0xF<<0).toString(16) + "x" + (Math.random()*0xF<<0).toString(16).toUpperCase() + "]";
+    const code = "";
     let val = modifiers[y]
 
     if (!val) {
       // show exclamation point for low vals
       val = Math.floor(Math.random() *  100);
-      val = val > 20 ? ": " + val + "%" : ": " + val + "% (!)";
+      val = val > 20 ? [val + "%", "ok"] : [val + "%", "bad"];
     }    
 
-    return code + " " + metrics[x] + val;
+    return [code + " " + metrics[x], val];
   }
 
 
@@ -150,38 +160,98 @@ class Logger extends Component {
     const canvas = d3.select(component.myRef.current);
     const context = canvas.node().getContext("2d");
     context.clearRect(0, 0, component.state.width, component.state.height);
-    context.font = fontSize + "px Jura";
-    context.fillStyle = component.state.strokeGreen;
     
     const delay = 15;
 
-    logs.map(function(entry, i) {
+    logs.map(function(log, i) {
       i = i + 1;
+      
       let xOffset = 0;
-      entry.map(function(char, z){
 
-       const charWidth = context.measureText(char).width; 
- 
-       if (i < component.state.rowCount -  1) {
+      if (i < component.state.rowCount - 1) {
+      // print all but the last line all at once
+        context.fillStyle = component.state.strokeGreen;
+        log[0].split("").map( function(char) {
+          context.font = fontSize + "px Jura";
+          const charWidth = context.measureText(char).width; 
           component.writeLetter(context, char, xOffset, i * fontSize);
           xOffset += charWidth;
-       } else {
-          setTimeout(function(){
-            context.fillStyle = component.state.strokeRed;
-            component.writeLetter(context, char, xOffset, i * fontSize);
-            xOffset += charWidth;
-         }, z * delay)       
-       }
-       
-      })
-    });
+        });
+        
+        // special color the status part of line
+        if (log[1][1] === "ok") {
+          context.fillStyle = component.state.strokeGreen;
+        } else if (log[1][1] === "in_progress") {
+          context.fillStyle = component.state.strokeBlue;
+        } else {
+          context.fillStyle = component.state.strokeRed;
+        }
 
-    setTimeout(function(){
-      logs = component.updateLogs(logs);
-      component.animate(logs);
-    }, Math.random() * (component.state.maxUpdateTime - component.state.minUpdateTime) + component.state.minUpdateTime);
+        log[1][0].split("").map( function(char) {
+          // make the status part of the line bold, too
+          context.font = "bold " + fontSize + "px Jura";
+          const charWidth = context.measureText(char).width; 
+          component.writeLetter(context, char, xOffset, i * fontSize);
+          xOffset += charWidth;
+        });
+
+      } else {
+
+        context.fillStyle = component.state.strokeGreen;
+        
+        let counter = 0;
+
+        log[0].split("").map( function(char) {
+          counter++;
+          context.font = fontSize + "px Jura";
+          const charWidth = context.measureText(char).width; 
+        
+          setTimeout(
+            function(){
+              context.fillStyle = component.state.strokeGreen;
+              component.writeLetter(context, char, xOffset, i * fontSize);
+              xOffset += charWidth;
+            },
+            counter * delay
+          );    
+
+        });
+
+        log[1][0].split("").map( function(char) {
+          counter++;
+          
+          context.font = "bold " + fontSize + "px Jura";
+          
+          const charWidth = context.measureText(char).width; 
+
+          setTimeout(
+            function(){
+              if (log[1][1] === "ok") {
+                context.fillStyle = component.state.strokeGreen;
+              } else if (log[1][1] === "in_progress") {
+                context.fillStyle = component.state.strokeBlue;
+              } else {
+                context.fillStyle = component.state.strokeRed;
+              }
+              component.writeLetter(context, char, xOffset, i * fontSize);
+              xOffset += charWidth;
+            },
+            counter * delay
+          );      
+       });
+      }
+
+    }); 
+
+
+    setTimeout(function() {
+        logs = component.updateLogs(logs);
+        component.animate(logs);
+      },
+        Math.random() * (component.state.maxUpdateTime - component.state.minUpdateTime) + component.state.minUpdateTime
+    );
   }
-  
+
   render() {
     return (
       <canvas ref={this.myRef}></canvas>
