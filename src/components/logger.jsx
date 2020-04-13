@@ -8,14 +8,14 @@ class Logger extends Component {
       this.state = {};
       this.myRef = React.createRef();
       this.state.animate = false;
-      this.state.maxHeight = 250;
-      this.state.fontSize = 19;
+      this.state.maxHeight = 24;
+      this.state.fontSize = 24;
       this.state.fillStyle = "green";
       this.state.maxUpdateTime = 5000; // max milliseconds before new log is printed
       this.state.minUpdateTime = 750; // max milliseconds before new log is printed
       this.state.strokeGreen = "#5eff89";
       this.state.strokeRed = "#eb4034";
-      this.state.strokeBlue = "#7773ff";
+      this.state.strokeBlue = "#40b3ff";
    }
 
    componentDidMount() {
@@ -84,32 +84,48 @@ class Logger extends Component {
 
   getLog() {
     const metrics = [
-      "oxygen regenerators: ",
-      "protease inhibitors: ",
-      "fuel convolvers: ",
-      "aft ion refractors: ",
-      "double-angel + vape ",
-      "double-angel + vape ",
-      "double-angel + vape ",
-      "double-angel + vape ",
-      "double-angel + vape ",
-      "forward ion refractors: ",
-      "aft solar shields: ",
-      "forward solar shields: ",
-      "dioxide sifters: ",
-      "orthagonic trim: ",
-      "thermite spectrometer: ",
-      "solenoid decouplers: ",
-      "diazapam conflators: ",
-      "thulium reconstitutor: ",
-      "hyper array trajectory: ",
-      "gallium thruster: ",
-      "load re-balancers: ",
-      "hyperclonic deflectors: ",
-      "copernicium inductor: ",
-      "radon inductors: ",
-      "astatine fabrictors: ",
-      "sim-grav rotators: ",
+      " | oxygen regenerators | ",
+      " | protease inhibitors | ",
+      " | fuel convolvers | ",
+      " | aft ion refractors | ",
+      " | forward ion refractors | ",
+      " | aft solar shields | ",
+      " | forward solar shields | ",
+      " | dioxide sifters | ",
+      " | orthagonic trim | ",
+      " | thermite spectrometer | ",
+      " | solenoid decouplers | ",
+      " | diazapam conflators | ",
+      " | thulium reconstitutor | ",
+      " | hyper array trajectory | ",
+      " | gallium thruster | ",
+      " | load re-balancers | ",
+      " | hyperclonic deflectors | ",
+      " | copernicium inductor | ",
+      " | radon inductors | ",
+      " | astatine fabrictors | ",
+      " | sim-grav rotators | ",
+      " | orissa horizon | ",
+      " | telemetry phasing | ",
+      " | tetrahedral rotation | ",
+      " | polyhedral convexor | ",
+      " | gyrobotics | ",
+      " | warp invector | ",
+      " | curvature solver | ",
+      " | metaphase cleaving | ",
+      " | quark drag | ",
+      " | quantum versor | ",
+      " | spheroid gain | ",
+      " | photon displacer | ",
+      " | gamma flux | ",
+      " | copernicium ingestor | ",
+      " | iberium mixers | ",
+      " | polymosaic scoping | ",
+      " | rhodium allocator | ",
+      " | cesium flexor | ",
+      " | semifold vaporizor |",
+
+
     ];
 
     const modifiers = [
@@ -125,7 +141,10 @@ class Logger extends Component {
       ["stable", "ok"],
       ["stable", "ok"],
       ["stable", "ok"],
-      ["stable", "ok"],
+      ["locked", "ok"],
+      ["locked", "ok"],
+      ["override", "bad"],
+      ["auto", "ok"],
       ["recalculating", "in_progress"],
       ["normal", "ok"],
       ["normal", "ok"],
@@ -140,17 +159,17 @@ class Logger extends Component {
     const y = Math.floor(Math.random() *  modifiers.length);
     
     // random hex
-    // const code = "[" + (Math.random()*0xF<<0).toString(16) + "x" + (Math.random()*0xF<<0).toString(16).toUpperCase() + "]";
-    const code = "";
+    const code = (Math.random()*0xFFFF<<0).toString(16);
+    // const code = "";
     let val = modifiers[y]
 
     if (!val) {
       // show exclamation point for low vals
       val = Math.floor(Math.random() *  100);
-      val = val > 20 ? [val + "%", "ok"] : [val + "%", "bad"];
+      val = val > 35 ? [val + "%", "ok"] : [val + "%", "bad"];
     }    
 
-    return [code + " " + metrics[x], val];
+    return [ code + metrics[x], val];
   }
 
 
@@ -159,6 +178,9 @@ class Logger extends Component {
     const fontSize = component.state.fontSize;
     const canvas = d3.select(component.myRef.current);
     const context = canvas.node().getContext("2d");
+    
+    context.textAlign = "right";
+
     context.clearRect(0, 0, component.state.width, component.state.height);
     
     const delay = 15;
@@ -172,7 +194,7 @@ class Logger extends Component {
       // print all but the last line all at once
         context.fillStyle = component.state.strokeGreen;
         log[0].split("").map( function(char) {
-          context.font = fontSize + "px Jura";
+          context.font = fontSize + "px Major Mono Display";
           const charWidth = context.measureText(char).width; 
           component.writeLetter(context, char, xOffset, i * fontSize);
           xOffset += charWidth;
@@ -189,7 +211,7 @@ class Logger extends Component {
 
         log[1][0].split("").map( function(char) {
           // make the status part of the line bold, too
-          context.font = "bold " + fontSize + "px Jura";
+          context.font = "bold " + fontSize + "px Major Mono Display";
           const charWidth = context.measureText(char).width; 
           component.writeLetter(context, char, xOffset, i * fontSize);
           xOffset += charWidth;
@@ -203,7 +225,7 @@ class Logger extends Component {
 
         log[0].split("").map( function(char) {
           counter++;
-          context.font = fontSize + "px Jura";
+          context.font = fontSize + "px Major Mono Display";
           const charWidth = context.measureText(char).width; 
         
           setTimeout(
@@ -220,7 +242,7 @@ class Logger extends Component {
         log[1][0].split("").map( function(char) {
           counter++;
           
-          context.font = "bold " + fontSize + "px Jura";
+          context.font = "bold " + fontSize + "px Major Mono Display";
           
           const charWidth = context.measureText(char).width; 
 

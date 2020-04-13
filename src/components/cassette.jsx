@@ -168,7 +168,7 @@ class Cassette extends Component {
         .attr("font-size", 7)
         .attr("font-weight", "bold")
         .attr("fill", "#000")
-        .text("HELLO");
+        .text("hello");
 
     return component.setState(
       {

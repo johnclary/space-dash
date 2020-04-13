@@ -11,6 +11,15 @@ const components = [
         className: "container-fluid",
         components : [
             {
+                className: "row",
+                components : [
+                    {
+                        name : "Logger",
+                        className: "col",
+                    },
+                ],
+            },
+            {
                 // grouping elements should never have a named defined, and must always
                 // contain an array at key `components`
                 className: "row",
@@ -31,7 +40,7 @@ const components = [
                     },
                     {
                         name : "Radar", // rmust match react component class to be rendered
-                        className: "co-3",
+                        className: "col",
                     },
                     {
                         className: "col",
@@ -42,7 +51,7 @@ const components = [
                                 components : [
                                     {
                                         name : "MeterHoriz", // rmust match react component class to be rendered
-                                        label: "Oxygen",
+                                        label: "oxygen",
                                         className: "col",
                                     },
                                 ],
@@ -52,7 +61,7 @@ const components = [
                                 components : [
                                     {
                                         name : "MeterHoriz", // rmust match react component class to be rendered
-                                        label: "Fuel",
+                                        label: "fuel",
                                         className: "col",
                                     },
                                 ],
@@ -62,7 +71,7 @@ const components = [
                                 components : [
                                     {
                                         name : "MeterHoriz", // rmust match react component class to be rendered
-                                        label: "Cell",
+                                        label: "cesium",
                                         className: "col",
                                     },
                                 ],
@@ -81,11 +90,7 @@ const components = [
   
                     {
                         name : "Cassette", // rmust match react component class to be rendered
-                        className: "col-3"
-                    },
-                    {
-                        name : "Logger",
-                        className: "col-3",
+                        className: "col"
                     },
                                     // {
                                     //     name : "SvgButton", // must match react component class to be rendered
